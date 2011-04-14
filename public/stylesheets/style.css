@@ -55,6 +55,39 @@ table {
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  overflow: auto;
+}
+
+#links {
+    height: 1em;
+    padding: 4px 120px;
+}
+
+#links ul {
+    list-style: none;
+}
+
+#links li {
+    display: inline;
+    margin-right: 12px;
+}
+#links li.account {
+    float: right;
+}
+
+#links a {
+    text-decoration: none
+}
+
+#content {
+    text-align: left;
+    padding: 4px 120px;
+}
+
+#application p {
+    margin: 20px 0px 0px 0px;
 }
 
 .wishText {

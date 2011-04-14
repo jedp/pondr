@@ -73,7 +73,9 @@ var CommentView = Backbone.View.extend({
 
 var Wish = Backbone.Model.extend({
   url: function() {
-    if (this.isNew) {
+    if (this.id == 'random.json') {
+      return 'wish/' + this.id
+    } else if (this.isNew) {
       return 'wish'
     } else {
       return 'wish/' + this.id
@@ -107,11 +109,9 @@ var WishView = Backbone.View.extend({
 
   vote: function() {
     var self = this;
-    console.log("vote for me: " + this.model.get('text'));
     var wish = new Wish({id: 'random.json'});
     wish.fetch({
       success: function(model, resp) {
-        console.log(model, resp);
         // re-rendering self as an example
         // will want to notify other to re-render
         //
@@ -120,8 +120,7 @@ var WishView = Backbone.View.extend({
         self.render();
       }, 
       error: function(resp) {
-        console.log("no: ");
-        console.log(resp);
+        console.error(resp);
       }
     });
   },
@@ -168,7 +167,6 @@ var NewWishApplicationView = Backbone.View.extend({
     var wish = new Wish();
     var comment = new Comment;
     var commentCollection = new CommentCollection;
-    console.log("username " + this.model.get('username'));
 
     comment.set({
         text: this.$('.newWishComment textarea').val(),
@@ -179,12 +177,18 @@ var NewWishApplicationView = Backbone.View.extend({
         whose: this.model.get('username'),
         comments: commentCollection});
             
-    console.log(JSON.stringify(wish));
     wish.save();
   }
 });
 
-var VoteView = Backbone.View.extend({
+// ----------------------------------------------------------------------
+// voting for one wish over another
+
+var VoteApplication = Backbone.Model.extend({});
+
+var VoteApplicationView = Backbone.View.extend({
+  model: VoteApplication,
+
   el: $("#application"),
 
   events: {
@@ -194,8 +198,8 @@ var VoteView = Backbone.View.extend({
     'click .like': 'like'
   },
 
-  choose: function(e) { console.log("submit") ; console.log(e); },
-  more: function(e) { console.log("more: "); console.log(this); },
+  choose: function(e) { console.log("submit") },
+  more: function(e) { console.log("more: ") },
   flag: function(e) { console.log("flag: " + e) },
   like: function(e) { console.log("like: " + e) },
 
@@ -211,23 +215,7 @@ var VoteView = Backbone.View.extend({
   addOne: function(wish) {
     var view = new WishView({model: wish});
     $(this.el).append(view.render().el);
-
   },
 });
 
-
-//script(type='text/javascript')
-//  head.ready(function() {
-//    var wishes = new WishCollection;
-//    var app = new VoteView;
-//
-//    // bootstrap the collection efficiently.  
-//    // http://documentcloud.github.com/backbone/#FAQ-bootstrap
-//    wishes.refresh( !{ JSON.stringify(wishes) } );
-//
-//    // add wishes to the app view
-//    wishes.each( app.addOne );
-//
-//    console.log("wishes refreshed");
-// });
 

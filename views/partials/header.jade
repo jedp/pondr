@@ -1,6 +1,3 @@
-#banner
-  h1 Sparrow
-
 #links
   ul
     - var links = ['wish', 'vote', 'find', 'list']
@@ -13,9 +10,9 @@
           a(href='/'+links[i])= links[i]
     
     - if (typeof username !== 'undefined')
-      li 
+      li.account 
         a(href='/logout') Logout #{username}
     - else
-      li 
+      li.account
         a(href='/login') Login
      

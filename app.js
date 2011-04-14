@@ -26,6 +26,8 @@ app.configure(function(){
   app.use(express.methodOverride());
   app.use(express.session({store:new RedisStore(), secret: settings.secret}));
 
+  app.use(express.logger({format: ':url :method :status :remote-addr :response-timems :date'}));
+
   // serve css and js
   app.use(express.static(__dirname + '/public'));
 });
@@ -89,12 +91,10 @@ app.get('/wish', loginRequired, function getRoot(req, res) {
 app.post('/wish', loginRequired, function postWish(req, res) {
   var wish = new models.Wish(req.body);
   return wish.save(function(err) {
-    console.log("new " + wish);
     if (err) {
       console.error(err);
       res.redirect('/wish');
     } else {
-      console.log('vote now!');
       res.redirect('/vote/'+wish._id);
     }
   });
@@ -123,7 +123,6 @@ app.post('/signup', function postSignup(req, res) {
     } 
 
     else {
-      console.log("ok, moving on");
       return res.redirect('/login');
     }
   });
@@ -179,7 +178,6 @@ app.get('/logout', function getLogout(req, res) {
 app.get('/wish/random.:format', function getWishes(req, res) {
   var format = req.params.format
   models.Wish.findRandom(null, function(err, wish) {
-    console.log('got wish: '  + wish);
     switch (format) {
       case 'json': 
         res.write(JSON.stringify(wish));
