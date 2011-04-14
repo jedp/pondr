@@ -1,0 +1,18 @@
+#application
+  p I think we should have:
+
+  .newWish
+    textarea(class='newWish', rows='4', cols='60')
+
+  .newWishComment
+    textarea(class='newComment', rows='8', cols='60')
+
+  button.submit Yes, that's what I think
+
+script(type='text/javascript')
+  head.ready(function() {
+    var model = new NewWishApplication({username:"#{username}"});
+    var app = new NewWishApplicationView({model: model});
+  });
+
+

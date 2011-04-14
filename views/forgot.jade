@@ -1,0 +1,14 @@
+!!! 5
+html(lang="en")
+  head
+    title password reminder
+  body
+    
+    #content
+      form(method="post", action="/password")
+        div
+          label Username:
+            input(type='text', name='username')
+
+        div
+          input(type='submit', value='send password reminder')

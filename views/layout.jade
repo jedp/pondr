@@ -1,0 +1,54 @@
+!!!
+html
+  head
+    link(rel='stylesheet', href='/stylesheets/style.css')
+
+    script(type='text/javascript', src='/javascripts/head/dist/head.min.js')
+
+    title Sparrow
+  body
+    !=partial('partials/header')
+
+    #wish-template(style='display: none')
+      div(id='wish_{{ _id }}', class='wish')
+        .wishText
+          a(class='vote') {{ text }}
+        .options
+          a(class='more') more...
+          a(class='flag') flag
+          a(class='like') like
+
+        .comments 
+
+        .addComment Add a comment:
+          textarea
+
+    #comment-template(style='display: none')
+      .comment
+        .commentText {{ text }}
+        .commentInfo
+          .whose {{ whose }}
+          .score {{ score }}
+        .responses
+
+        .addResponse Add a response:
+          textarea
+
+    #response-template(style='display: none')
+      .response
+        .responseText {{ text }}
+        .responseInfo
+          .whose {{ whose }}
+          .score {{ score }}
+      
+
+    #content!= body
+
+    script(type='text/javascript')
+      head.js(
+        {jquery: "/javascripts/jquery-152.min.js"},
+        {underscore: "/javascripts/underscore/underscore-min.js"},
+        {backbone: "/javascripts/backbone/backbone-min.js"},
+        {models: "/javascripts/models.js"}
+      );
+  

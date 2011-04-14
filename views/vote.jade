@@ -1,0 +1,20 @@
+p Which would be more awesome?
+
+#application
+  #wish-list
+
+script(type='text/javascript')
+  head.ready(function() {
+    console.log("username: #{username}");
+    var wishes = new WishCollection;
+    var app = new VoteView;
+
+    // bootstrap the collection efficiently.  
+    // http://documentcloud.github.com/backbone/#FAQ-bootstrap
+    wishes.refresh( !{ JSON.stringify(wishes) } );
+
+    // add wishes to the app view
+    wishes.each( app.addOne );
+
+  });
+

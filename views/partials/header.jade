@@ -1,0 +1,21 @@
+#banner
+  h1 Sparrow
+
+#links
+  ul
+    - var links = ['wish', 'vote', 'find', 'list']
+    - for (var i in links)
+      - if (typeof here !== 'undefined' && links[i]==here)
+        li
+          span.dim= here
+      - else
+        li
+          a(href='/'+links[i])= links[i]
+    
+    - if (typeof username !== 'undefined')
+      li 
+        a(href='/logout') Logout #{username}
+    - else
+      li 
+        a(href='/login') Login
+     

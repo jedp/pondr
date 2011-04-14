@@ -1,0 +1,26 @@
+!!! 5
+html(lang="en")
+  head
+    title new user
+  body
+    
+    #content
+      form(method="post", action="/signup")
+        div
+          label Username:
+            input(type='text', name='username')
+              
+        div
+          label Password:
+            input(type='password', name='password1')
+
+        div
+          label Password again:
+            input(type='password', name='password2')
+
+        div 
+          label Email:
+            input(type='text', name='email')
+
+        div
+          input(type='submit', value='signup')
