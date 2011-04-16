@@ -237,22 +237,20 @@ app.get('/vote', loginRequired, function vote(req, res) {
 });
 
 
-app.get('/find', loginRequired, function find(req, res) {
-  res.render('find', {
-    locals: {
-      username: req.session.user,
-    }
-  });
-});
-
 app.get('/list', loginRequired, function list(req, res) {
-  res.render('list', {
-    locals: {
-      username: req.session.user,
-    }
-  });
+  models.Wish
+    .find({})
+    .sort('votes', -1)
+    .limit(10)
+    .execFind(function(err, wishes) {
+      res.render('list', {
+        locals: {
+          username: req.session.user,
+          wishes: wishes
+        }
+      });
+    });
 });
-
 // Only listen on $ node app.js
 
 if (!module.parent) {

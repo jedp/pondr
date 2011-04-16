@@ -1,1 +1,19 @@
-#application
+#application pie
+  
+  
+script(type='text/javascript')
+  head.ready(function() {
+    var wishes = new WishCollection;
+
+    var app = new ListApplication({username:"#{username}"});
+    var appView = new ListApplicationView({model: app});
+
+    // bootstrap the collection efficiently.  
+    // http://documentcloud.github.com/backbone/#FAQ-bootstrap
+    wishes.refresh( !{ JSON.stringify(wishes) } );
+
+    // add wishes to the app view
+    wishes.each( appView.addOne );
+
+  });
+

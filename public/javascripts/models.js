@@ -162,6 +162,22 @@ var NewWishApplicationView = Backbone.View.extend({
   }
 });
 
+var ListApplication = Backbone.Model.extend({});
+var ListApplicationView = Backbone.View.extend({
+  model: ListApplication,
+
+  el: $("#application"),
+
+  initialize: function() {
+    _.bindAll(this, 'addOne', 'render');
+  },
+
+  addOne: function(wish) {
+    var view = new WishView({model: wish});
+    $(this.el).append(view.render().el);
+  }
+});
+
 // ----------------------------------------------------------------------
 // voting for one wish over another
 
