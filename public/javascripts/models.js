@@ -74,11 +74,11 @@ var CommentView = Backbone.View.extend({
 var Wish = Backbone.Model.extend({
   url: function() {
     if (this.id == 'random.json') {
-      return 'wish/' + this.id
+      return 'wish/' + this.id;
     } else if (this.isNew) {
-      return 'wish'
+      return 'wish';
     } else {
-      return 'wish/' + this.id
+      return 'wish/' + this.get('_id');
     }
   },
 
@@ -95,10 +95,6 @@ var WishView = Backbone.View.extend({
 
   tagName: "div",
 
-  events: {
-    'click .vote': 'vote'
-  },
-
   template: _.template( $('#wish-template').html() ),
 
   initialize: function() {
@@ -107,23 +103,6 @@ var WishView = Backbone.View.extend({
     this.model.view = this;
   },
 
-  vote: function() {
-    var self = this;
-    var wish = new Wish({id: 'random.json'});
-    wish.fetch({
-      success: function(model, resp) {
-        // re-rendering self as an example
-        // will want to notify other to re-render
-        //
-        // tell others to replace with new random model
-        self.model = model;
-        self.render();
-      }, 
-      error: function(resp) {
-        console.error(resp);
-      }
-    });
-  },
 
   edit: function() {
     $(this.el).addClass("editing");
@@ -172,12 +151,15 @@ var NewWishApplicationView = Backbone.View.extend({
         text: this.$('.newWishComment textarea').val(),
         whose: this.model.get('username')});
     commentCollection.add(comment);
+
     wish.set({
         text: this.$('.newWish textarea').val(),
         whose: this.model.get('username'),
         comments: commentCollection});
             
     wish.save();
+    console.log("saved");
+    console.log(wish.get('_id'));
   }
 });
 
@@ -192,29 +174,48 @@ var VoteApplicationView = Backbone.View.extend({
   el: $("#application"),
 
   events: {
-    'click .text a': 'choose',
+    'click .vote': 'vote',
     'click .more': 'more',
     'click .flag': 'flag',
-    'click .like': 'like'
   },
 
-  choose: function(e) { console.log("submit") },
-  more: function(e) { console.log("more: ") },
-  flag: function(e) { console.log("flag: " + e) },
-  like: function(e) { console.log("like: " + e) },
-
   initialize: function() {
+    this.views = [];
     _.bindAll(this, 'addOne', 'render');
     // we would fetch() here, except that the stuff's already in the dom
     // via the server template.
   },
 
-  render: function() {
+  vote: function(event) {
+    var self = this;
+    _.each(this.views, function(view) { 
+      if (! view.el.contains(event.currentTarget)) {
+        self.removeView(view);
+      }
+    });
+
+    var wish = new Wish({id: 'random.json'});
+    wish.fetch({
+      error: function(resp) { 
+        console.error(resp);
+      },
+      success: function(model, resp) {
+        self.addOne(wish);
+      }
+    });
+  },
+
+  more: function(e) { console.log("more: ") },
+  flag: function(e) { console.log("flag: " + e) },
+
+  removeView: function(wish) {
+    wish.remove();
   },
 
   addOne: function(wish) {
     var view = new WishView({model: wish});
     $(this.el).append(view.render().el);
+    this.views.unshift(view);
   },
 });
 
