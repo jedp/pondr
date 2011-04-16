@@ -16,12 +16,16 @@
   div
   
     p
-      button.submit Yes, that's what I think
+      span
+        input(type='checkbox', id='anonymous') 
+        span Remain anonymous
+      span  
+        button.submit Yes, that's what I think
 
 script(type='text/javascript')
   head.ready(function() {
-    var model = new NewWishApplication({username:"#{username}"});
-    var app = new NewWishApplicationView({model: model});
+    var wish = new Wish( !{ JSON.stringify(wish) } ); 
+    var app = new NewWishApplicationView({model: wish});
   });
 
 

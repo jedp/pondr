@@ -90,11 +90,25 @@ body {
     margin: 20px 0px 0px 0px;
 }
 
+.wish {
+  margin-top: 40px;
+}
+
 .wishText {
   text-align: center;
   padding: 8px;
   font-size: 1.2em;
   border: 1px solid gray;
+}
+
+ul.options {
+  list-style: none;
+  text-align: right;
+}
+
+ul.options li {
+  display: inline-block;
+  margin-left: 12px;
 }
 
 .commentText, .addComment {
@@ -108,6 +122,11 @@ body {
   padding: 4px;
   font-size: .8em;
   margin-left: 80px;
+}
+
+.comments-container {
+  visibility: hidden;
+  display: none;
 }
 
 a {

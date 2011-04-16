@@ -22,6 +22,7 @@ var CommentSchema = new Schema({
 var WishSchema = new Schema({
     text: String,
     slug: String,
+    anonymous: {type: Boolean, default: false},
     created: Date,
     updated: {type: Date, default: Date.now },
 

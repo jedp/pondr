@@ -13,15 +13,17 @@ html
       div(id='wish_{{ _id }}', class='wish')
         .wishText
           a(class='vote') {{ text }}
-        .options
-          a(class='more') more...
-          a(class='flag') flag
-          a(class='like') like
+        ul.options
+          li 
+            a(class='more') more...
+          li 
+            a(class='flag') flag
 
-        .comments 
+        .comments-container
+          .comments 
 
-        .addComment Add a comment:
-          textarea
+          .addComment Add a comment:
+            textarea
 
     #comment-template(style='display: none')
       .comment

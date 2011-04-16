@@ -24,6 +24,7 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.cookieParser());
   app.use(express.methodOverride());
+
   app.use(express.session({store:new RedisStore(), secret: settings.secret}));
 
   app.use(express.logger({format: ':url :method :status :remote-addr :response-timems :date'}));
@@ -75,29 +76,28 @@ function loginRequired(req, res, next) {
     }
 }
 
-//app.get('/*.(js|css)', function renderJsCss (req, res) {
-//    // security?  ../../.. check?
-//    res.sendfile('./public'+req.url);
-//});
-
-app.get('/wish', loginRequired, function getRoot(req, res) {
+app.get('/wish', function getRoot(req, res) {
+  var wish = new models.Wish({whose:req.session.user});
   res.render('wish', {
     locals: {
-      username: req.session.user
+      username: req.session.user,
+      wish: wish
     }
   });
 });
 
 app.post('/wish', loginRequired, function postWish(req, res) {
   var wish = new models.Wish(req.body);
-  return wish.save(function(err) {
-    if (err) {
-      console.error(err);
-      res.redirect('/wish');
-    } else {
-      res.redirect('/vote/'+wish._id);
+  wish.save(
+    function(err) {
+      if (err) { 
+        res.redirect('wish');
+      } else {
+        res.writeHead(200);
+        res.end();
+      }
     }
-  });
+  );
 });
 
 app.get('/', function(req, res) {
@@ -131,7 +131,7 @@ app.post('/signup', function postSignup(req, res) {
 app.get('/forgot', function(req, res) {
   res.render('forgot', {
     locals:
-        {username: req.session.user.username}
+        {username: req.session.user}
   });    
 });
 
@@ -175,10 +175,24 @@ app.get('/logout', function getLogout(req, res) {
   });
 });
 
-app.get('/wish/random.:format', function getWishes(req, res) {
+app.get('/wish/random.:format', function getRandomWish(req, res) {
   var format = req.params.format
   models.Wish.findRandom(null, function(err, wish) {
     switch (format) {
+      case 'json': 
+        res.write(JSON.stringify(wish));
+        break;
+      default:
+        res.write("unknown format: " + format);
+        break;
+    }
+    res.end();
+  });
+});
+
+app.get('/wish/random.:format/not/:id', function getOtherRandomWish (req, res) {
+  models.Wish.findRandom(req.params.id, function(err, wish) {
+    switch (req.params.format) {
       case 'json': 
         res.write(JSON.stringify(wish));
         break;
@@ -214,7 +228,7 @@ app.get('/vote', loginRequired, function vote(req, res) {
     models.Wish.findRandom(wish1._id, function(err, wish2) {
       res.render('vote', {
         locals: {
-          username: req.session.user.username,
+          username: req.session.user,
           wishes: [wish1, wish2]
         }
       });
@@ -223,12 +237,20 @@ app.get('/vote', loginRequired, function vote(req, res) {
 });
 
 
-app.get('/find', function find(req, res) {
-  res.render('find');  
+app.get('/find', loginRequired, function find(req, res) {
+  res.render('find', {
+    locals: {
+      username: req.session.user,
+    }
+  });
 });
 
-app.get('/list', function list(req, res) {
-  res.render('list');
+app.get('/list', loginRequired, function list(req, res) {
+  res.render('list', {
+    locals: {
+      username: req.session.user,
+    }
+  });
 });
 
 // Only listen on $ node app.js

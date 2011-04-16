@@ -73,12 +73,12 @@ var CommentView = Backbone.View.extend({
 
 var Wish = Backbone.Model.extend({
   url: function() {
-    if (this.id == 'random.json') {
-      return 'wish/' + this.id;
+    if (this.id.match(/random.json.*/)) {
+      return '/wish/' + this.id;
     } else if (this.isNew) {
-      return 'wish';
+      return '/wish';
     } else {
-      return 'wish/' + this.get('_id');
+      return '/wish/' + this.get('_id');
     }
   },
 
@@ -134,7 +134,7 @@ var WishCollection = Backbone.Collection.extend({ model: Wish });
 var NewWishApplication = Backbone.Model.extend({});
 
 var NewWishApplicationView = Backbone.View.extend({
-  model: NewWishApplication,
+  model: Wish,
 
   el: $('#application'),
 
@@ -143,23 +143,22 @@ var NewWishApplicationView = Backbone.View.extend({
   },
 
   commit: function(event) {
-    var wish = new Wish();
+    //var wish = new Wish();
     var comment = new Comment;
     var commentCollection = new CommentCollection;
 
     comment.set({
         text: this.$('.newWishComment textarea').val(),
-        whose: this.model.get('username')});
+        whose: this.model.get('whose')});
     commentCollection.add(comment);
 
-    wish.set({
+    this.model.set({
         text: this.$('.newWish textarea').val(),
-        whose: this.model.get('username'),
         comments: commentCollection});
             
-    wish.save();
-    console.log("saved");
-    console.log(wish.get('_id'));
+    this.model.save();
+    this.el.fadeOut(200);
+    location.replace('/vote/'+this.model.get('_id'))
   }
 });
 
@@ -188,13 +187,15 @@ var VoteApplicationView = Backbone.View.extend({
 
   vote: function(event) {
     var self = this;
+    var notId = '';
     _.each(this.views, function(view) { 
       if (! view.el.contains(event.currentTarget)) {
+        notId = view.model.get('_id');
         self.removeView(view);
       }
     });
 
-    var wish = new Wish({id: 'random.json'});
+    var wish = new Wish({id: 'random.json/not/'+notId});
     wish.fetch({
       error: function(resp) { 
         console.error(resp);
@@ -208,8 +209,8 @@ var VoteApplicationView = Backbone.View.extend({
   more: function(e) { console.log("more: ") },
   flag: function(e) { console.log("flag: " + e) },
 
-  removeView: function(wish) {
-    wish.remove();
+  removeView: function(view) {
+    view.remove();
   },
 
   addOne: function(wish) {
