@@ -190,8 +190,8 @@ app.get('/wish/random.:format', function getRandomWish(req, res) {
   });
 });
 
-app.get('/wish/random.:format/not/:id', function getOtherRandomWish (req, res) {
-  models.Wish.findRandom(req.params.id, function(err, wish) {
+app.get('/wish/random.:format/not/:ids', function getOtherRandomWish (req, res) {
+  models.Wish.findRandom(req.params.ids.split(','), function(err, wish) {
     switch (req.params.format) {
       case 'json': 
         res.write(JSON.stringify(wish));
@@ -209,7 +209,7 @@ app.get('/vote/:id', loginRequired, function voteOn(req, res) {
     if (err || ! wish1) {
       res.redirect('vote')
     } else {
-      models.Wish.findRandom(wish1._id, function(err, wish2) {
+      models.Wish.findRandom([wish1._id], function(err, wish2) {
         res.render('vote', {
           locals: {
             username: req.session.user,
@@ -225,7 +225,7 @@ app.get('/vote', loginRequired, function vote(req, res) {
   // get two random wishes and return them
   // the interface will go from there
   models.Wish.findRandom(null, function(err, wish1) {
-    models.Wish.findRandom(wish1._id, function(err, wish2) {
+    models.Wish.findRandom([wish1._id], function(err, wish2) {
       res.render('vote', {
         locals: {
           username: req.session.user,

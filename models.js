@@ -51,18 +51,18 @@ WishSchema.method('voteAgainst', function() {
     this.save();
 });
 
-WishSchema.static('findRandom', function(otherThanThisId, callback) {
+WishSchema.static('findRandom', function(otherThanTheseIds, callback) {
     // callback with a random Wish.
     // if otherThanThisId is provided, the wish will not have that id.
     rand = Math.random();
 
-    if (otherThanThisId) {
-        skip_id = otherThanThisId;
+    if (otherThanTheseIds) {
+        skip_ids = otherThanTheseIds;
     } else {
-        skip_id = null
+        skip_ids = null
     }
 
-    this.findOne( {_id: {'$ne': skip_id},
+    this.findOne( {_id: {'$nin': skip_ids},
                  '$or': [ {'random': {'$gte': rand}},
                          {'random': {'$lte': rand}}   ]}, callback);
 });

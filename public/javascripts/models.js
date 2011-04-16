@@ -187,15 +187,15 @@ var VoteApplicationView = Backbone.View.extend({
 
   vote: function(event) {
     var self = this;
-    var notId = '';
+    var notIds = _.map(self.views, function(view) { return view.model.get('_id')} ).join(',');
+
     _.each(this.views, function(view) { 
       if (! view.el.contains(event.currentTarget)) {
-        notId = view.model.get('_id');
         self.removeView(view);
       }
     });
 
-    var wish = new Wish({id: 'random.json/not/'+notId});
+    var wish = new Wish({id: 'random.json/not/'+notIds});
     wish.fetch({
       error: function(resp) { 
         console.error(resp);
