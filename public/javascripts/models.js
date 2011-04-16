@@ -210,7 +210,9 @@ var VoteApplicationView = Backbone.View.extend({
   flag: function(e) { console.log("flag: " + e) },
 
   removeView: function(view) {
+    // remove both from the UI and from our list
     view.remove();
+    this.views.splice(this.views.indexOf(view), 1);
   },
 
   addOne: function(wish) {
