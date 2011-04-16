@@ -59,7 +59,7 @@ WishSchema.static('findRandom', function(otherThanTheseIds, callback) {
     if (otherThanTheseIds) {
         skip_ids = otherThanTheseIds;
     } else {
-        skip_ids = null
+        skip_ids = []
     }
 
     this.findOne( {_id: {'$nin': skip_ids},
