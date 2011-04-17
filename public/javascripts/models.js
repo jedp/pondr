@@ -73,7 +73,7 @@ var CommentView = Backbone.View.extend({
 
 var Wish = Backbone.Model.extend({
   url: function() {
-    if (this.id.match(/random.json.*/)) {
+    if (this.id && this.id.match(/random.json.*/)) {
       return '/wish/' + this.id;
     } else if (this.isNew) {
       return '/wish';
