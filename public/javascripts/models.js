@@ -89,7 +89,7 @@ var Wish = Backbone.Model.extend({
   },
 
   voteFor: function() {
-    now.voteForId(this.get('_id');
+    now.voteForId(this.get('_id'));
   }
 
 });
