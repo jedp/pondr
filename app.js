@@ -2,18 +2,23 @@
 /**
  * Module dependencies.
  */
-
+    
 var fs = require('fs');
 eval(fs.readFileSync('./config.js', 'ascii'));
 
 var express = require('express');
 var connect = require('connect');
 var RedisStore = require('connect-redis');
+var nowjs = require('now');
 
 var models = require('./models');
 var auth = require('./lib/auth');
 
 var app = module.exports = express.createServer();
+
+// use now.js for client models to talk to call functions
+// other than save() 
+var everyone = nowjs.initialize(app);
 
 // Configuration
 
@@ -69,7 +74,7 @@ app.post('/login', function postLogin(req, res) {
 
 function loginRequired(req, res, next) {
     if (req.session.user) {
-        next();
+        next()
     } else {
         req.session.error = 'Computer says no';
         res.redirect('/login');
@@ -251,6 +256,14 @@ app.get('/list', loginRequired, function list(req, res) {
       });
     });
 });
+
+everyone.now.voteForId = function(id, callback) {
+  models.Wish.voteForId(id, function(err, result) {
+    if (!err && callback) { callback(result) }
+  });
+};
+
+
 // Only listen on $ node app.js
 
 if (!module.parent) {

@@ -86,6 +86,10 @@ var Wish = Backbone.Model.extend({
     if (! this.get('created') ) {
       this.set({created: new Date});
     }
+  },
+
+  voteFor: function() {
+    now.voteForId(this.get('_id');
   }
 
 });
@@ -205,11 +209,19 @@ var VoteApplicationView = Backbone.View.extend({
     var self = this;
     var notIds = _.map(self.views, function(view) { return view.model.get('_id')} ).join(',');
 
+    var toRemove = [];
     _.each(this.views, function(view) { 
-      if (! view.el.contains(event.currentTarget)) {
-        self.removeView(view);
+      if (!view.el.contains(event.currentTarget)) {
+        // mark me for removal
+        toRemove.unshift(view);
+      } else {
+        // vote for me!
+        view.model.voteFor();
       }
     });
+
+    // remove views that weren't voted for
+    _.each(toRemove, function(r) { self.removeView(r)});
 
     var wish = new Wish({id: 'random.json/not/'+notIds});
     wish.fetch({
@@ -226,9 +238,8 @@ var VoteApplicationView = Backbone.View.extend({
   flag: function(e) { console.log("flag: " + e) },
 
   removeView: function(view) {
-    // remove both from the UI and from our list
-    view.remove();
     this.views.splice(this.views.indexOf(view), 1);
+    view.remove();
   },
 
   addOne: function(wish) {

@@ -30,8 +30,8 @@ var WishSchema = new Schema({
     comments: [CommentSchema],
 
     random: {type: Number, index: true},
-    votes: Number,
-    rejects: Number,
+    votes: {type: Number, default: 0},
+    rejects: {type: Number, default: 0}
 
 });
 
@@ -41,12 +41,12 @@ WishSchema.pre('save', function(next) {
     next();
 });
 
-WishSchema.method('voteFor', function() {
+WishSchema.method('upVote', function() {
     this.votes += 1;
     this.save();
 });
 
-WishSchema.method('voteAgainst', function() {
+WishSchema.method('downVote', function() {
     this.rejects += 1;
     this.save();
 });
@@ -65,6 +65,12 @@ WishSchema.static('findRandom', function(otherThanTheseIds, callback) {
     this.findOne( {_id: {'$nin': skip_ids},
                  '$or': [ {'random': {'$gte': rand}},
                          {'random': {'$lte': rand}}   ]}, callback);
+});
+
+WishSchema.static('voteForId', function(id, callback) {
+  this.findOne({_id: id}, function(err, model) {
+    callback(err, model.votes);
+  });
 });
 
 mongoose.model('ResponseModel', ResponseSchema);
