@@ -69,6 +69,7 @@ WishSchema.static('findRandom', function(otherThanTheseIds, callback) {
 
 WishSchema.static('voteForId', function(id, callback) {
   this.findOne({_id: id}, function(err, model) {
+    model.upVote();
     callback(err, model.votes);
   });
 });
