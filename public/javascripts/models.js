@@ -101,12 +101,31 @@ var WishView = Backbone.View.extend({
 
   template: _.template( $('#wish-template').html() ),
 
+  events: {
+    'click .more': 'more',
+    'click .flag': 'flag'
+  },
+
   initialize: function() {
     _.bindAll(this, 'render');
     this.model.bind('change', this.render);
     this.model.view = this;
+    this.viewer = null;
   },
 
+  setViewer: function(username) { 
+    this.viewer = username;
+  },
+
+  more: function(event) {
+    // open and display comments          
+    this.$('.comments-container').toggle();
+  },
+
+  flag: function(event) {
+    // flag as inappropriate
+    console.log('flagged by ' + this.viewer);
+  },
 
   edit: function() {
     $(this.el).addClass("editing");
@@ -193,9 +212,7 @@ var VoteApplicationView = Backbone.View.extend({
   el: $("#application"),
 
   events: {
-    'click .vote': 'vote',
-    'click .more': 'more',
-    'click .flag': 'flag',
+    'click .vote': 'vote'
   },
 
   initialize: function() {
@@ -234,9 +251,6 @@ var VoteApplicationView = Backbone.View.extend({
     });
   },
 
-  more: function(e) { console.log("more: ") },
-  flag: function(e) { console.log("flag: " + e) },
-
   removeView: function(view) {
     this.views.splice(this.views.indexOf(view), 1);
     view.remove();
@@ -244,6 +258,7 @@ var VoteApplicationView = Backbone.View.extend({
 
   addOne: function(wish) {
     var view = new WishView({model: wish});
+    view.setViewer(this.model.get('username'));
     $(this.el).append(view.render().el);
     this.views.unshift(view);
   },
