@@ -112,20 +112,17 @@ ul.options li {
 }
 
 .commentText, .addComment {
-  border: 1px solid gray;
   padding: 4px;
   margin-left: 40px;
 } 
 
 .responseText, .addResponse{
-  border: 1px solid gray;
   padding: 4px;
   font-size: .8em;
   margin-left: 80px;
 }
 
 .comments-container {
-  visibility: hidden;
   display: none;
 }
 
