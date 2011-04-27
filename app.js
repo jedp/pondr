@@ -9,8 +9,8 @@ eval(fs.readFileSync('./config.js', 'ascii'));
 var express = require('express');
 var connect = require('connect');
 var RedisStore = require('connect-redis');
-var nowjs = require('now');
 
+var nowjs = require('now');
 var models = require('./models');
 var auth = require('./lib/auth');
 
@@ -30,7 +30,7 @@ app.configure(function(){
   app.use(express.cookieParser());
   app.use(express.methodOverride());
 
-  app.use(express.session({store:new RedisStore(), secret: settings.secret}));
+  app.use(express.session({store: new RedisStore(), secret: settings.secret}));
 
   app.use(express.logger({format: ':url :method :status :remote-addr :response-timems :date'}));
 
@@ -54,6 +54,7 @@ app.get('/login', function getLogin(req, res) {
 
 app.post('/login', function postLogin(req, res) {
   return auth.authenticateUser(req.body.username, req.body.password, function userAuthd(err, user) {
+
     if (user) {
       req.session.regenerate(function regenerateSession() {
         req.session.cookie.maxAge = 100 * 24 * 24 * 60 * 60 * 1000;
@@ -91,7 +92,7 @@ app.get('/wish', function getRoot(req, res) {
   });
 });
 
-app.post('/wish', loginRequired, function postWish(req, res) {
+app.post('/wish', function postWish(req, res) {
   var wish = new models.Wish(req.body);
   wish.save(
     function(err) {
