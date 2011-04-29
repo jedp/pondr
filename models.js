@@ -1,5 +1,9 @@
+// load settings
+var fs = require('fs');
+eval(fs.readFileSync('./config.js', 'ascii'));
+
 var mongoose = require('mongoose/');
-mongoose.connect ('mongodb://localhost/sparrow');
+mongoose.connect ('mongodb://localhost/' + settings.dbname);
 
 var Schema = mongoose.Schema;
 
@@ -64,7 +68,7 @@ WishSchema.static('findRandom', function(otherThanTheseIds, callback) {
 
     this.findOne( {_id: {'$nin': skip_ids},
                  '$or': [ {'random': {'$gte': rand}},
-                         {'random': {'$lte': rand}}   ]}, callback);
+                          {'random': {'$lte': rand}}  ]}, callback);
 });
 
 WishSchema.static('voteForId', function(id, callback) {
