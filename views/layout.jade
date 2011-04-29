@@ -5,7 +5,7 @@ html
 
     script(type='text/javascript', src='/javascripts/headjs/dist/head.min.js')
 
-    title Wishing Well
+    title pondr
   body
     !=partial('partials/header')
 
@@ -18,25 +18,31 @@ html
             a(class='more') discuss
           li 
             a(class='flag') flag
-          li
-            span(class='votes') {{ votes }}
 
         .comments-container
           .comments 
 
-          .addComment Add a comment:
-            textarea
+          .addComment 
+            div Add a new comment:
+            .textarea-container
+              textarea
+            input(type='submit', class='submit')
 
     #comment-template(style='display: none')
       .comment
         .commentText {{ text }}
         .commentInfo
-          .whose {{ whose }}
-          .score {{ score }}
+          ul
+            li.whose {{ whose }}
+            li.flag flag
+            li.upvote upvote
         .responses
 
-        .addResponse Add a response:
-          textarea
+        .addResponse 
+          div Respond to this:
+          .textarea-container
+            textarea
+          input(type='submit', class='submit')
 
     #response-template(style='display: none')
       .response
