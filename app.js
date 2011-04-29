@@ -75,24 +75,25 @@ app.post('/login', function postLogin(req, res) {
 
 function loginRequired(req, res, next) {
     if (req.session.user) {
-        next()
+        next();
     } else {
         req.session.error = 'Computer says no';
         res.redirect('/login');
     }
 }
 
-app.get('/wish', function getRoot(req, res) {
+app.get('/wish', loginRequired, function getRoot(req, res) {
   var wish = new models.Wish({whose:req.session.user});
   res.render('wish', {
     locals: {
+      here: 'wish',
       username: req.session.user,
       wish: wish
     }
   });
 });
 
-app.post('/wish', function postWish(req, res) {
+app.post('/wish', loginRequired, function postWish(req, res) {
   var wish = new models.Wish(req.body);
   wish.save(
     function(err) {
@@ -218,6 +219,7 @@ app.get('/vote/:id', loginRequired, function voteOn(req, res) {
       models.Wish.findRandom([wish1._id], function(err, wish2) {
         res.render('vote', {
           locals: {
+            here: 'vote',
             username: req.session.user,
             wishes: [wish1, wish2]
           }
@@ -234,6 +236,7 @@ app.get('/vote', loginRequired, function vote(req, res) {
     models.Wish.findRandom([wish1._id], function(err, wish2) {
       res.render('vote', {
         locals: {
+          here: 'vote',
           username: req.session.user,
           wishes: [wish1, wish2]
         }
@@ -251,6 +254,7 @@ app.get('/list', loginRequired, function list(req, res) {
     .execFind(function(err, wishes) {
       res.render('list', {
         locals: {
+          here: 'list',          
           username: req.session.user,
           wishes: wishes
         }

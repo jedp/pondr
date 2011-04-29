@@ -3,8 +3,8 @@
     - var links = ['wish', 'vote', 'list']
     - for (var i in links)
       - if (typeof here !== 'undefined' && links[i]==here)
-        li
-          span.dim= here
+        li.current
+          span= here
       - else
         li
           a(href='/'+links[i])= links[i]
