@@ -162,7 +162,7 @@ var NewWishApplicationView = Backbone.View.extend({
   el: $('#application'),
 
   events: {
-    'click .submit': 'commit'
+    'click .submit': 'commit',
   },
 
   commit: function(event) {
@@ -212,7 +212,8 @@ var VoteApplicationView = Backbone.View.extend({
   el: $("#application"),
 
   events: {
-    'click .vote': 'vote'
+    'click .vote': 'vote',
+    'click .more': 'more'
   },
 
   initialize: function() {
@@ -220,6 +221,14 @@ var VoteApplicationView = Backbone.View.extend({
     _.bindAll(this, 'addOne', 'render');
     // we would fetch() here, except that the stuff's already in the dom
     // via the server template.
+  },
+
+  more: function(event) {
+    // When somebody clicks the 'more' button on an item,
+    // hide all the other items.  (The view for the clicked
+    // item itself deals with toggling itself open/closed.)
+    var wishElem = $(event.currentTarget).closest('.wish');
+    $('#application .wish').not(wishElem).toggle();
   },
 
   vote: function(event) {
