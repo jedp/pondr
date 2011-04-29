@@ -57,8 +57,22 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   font-weight: 400;
   font-style: normal;
+  background-color: #3c5c7e;
   overflow: auto;
 }
+/**
+ *
+    blue 1: color="#b8dbfd";
+    blue 4: color="#3c5c7e"
+    blue 2t: color="#79bbfd"
+    brownish: color="#5d6e7e"
+    blue 3: color="#6095ca"
+ *
+ *
+ * 6469ff
+ * 96b8ff
+ *
+ */
 
 #links {
     height: 1em;
@@ -70,20 +84,42 @@ body {
 }
 
 #links li {
+    background-color: #6095ca;
     display: inline;
     margin-right: 12px;
-}
-#links li.account {
-    float: right;
+    padding: 4px 8px;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;    
 }
 
-#links a {
-    text-decoration: none
+#links li.current {
+  background-color: #79bbfd;
+}
+
+#links li.account {
+}
+
+#links li:hover {
+  background: #b8dbfd;
+}
+
+a,
+a:active,
+a:visited,
+a:hover {
+    text-decoration: none;
+    color: #000000;
 }
 
 #content {
     text-align: left;
-    padding: 4px 120px;
+    padding: 8px 20px;
+    background-color: #6095ca;
+    margin: 20px 120px;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;    
 }
 
 #application p {
@@ -98,10 +134,23 @@ body {
   text-align: center;
   padding: 8px;
   font-size: 1.2em;
-  border: 1px solid gray;
+  background-color: #b8dbfd;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;    
 }
 
+.newWish textarea {
+  height: 3em;
+}
+
+.newWishComment textarea {
+  height: 8em;
+}
+
+
 ul.options {
+  margin: 8px 0px;
   list-style: none;
   text-align: right;
 }
@@ -113,14 +162,41 @@ ul.options li {
 
 .commentText, .addComment {
   padding: 4px;
-  margin-left: 40px;
+  margin-left: 20px;
 } 
+
+.addComment textarea {
+  height: 6em;
+}
+
+.addComment input.submit {
+  float: right;
+}
+
+.commentInfo ul {
+  display: block;
+  list-style: none;
+  text-align: right;
+}
+
+.commentInfo ul li {
+  display: inline-block;
+  margin-left: 12px;
+}
+
 
 .responseText, .addResponse{
   padding: 4px;
-  font-size: .8em;
   margin-left: 80px;
 }
+
+.addResponse textarea {
+  height: 6em;
+}
+.addResponse input.submit {
+  float: right;
+}
+
 
 .comments-container {
   display: none;
@@ -130,5 +206,31 @@ a {
   cursor: pointer;
 }
 
+textarea { 
+  background: #b8dbfd;
+  border: 0px solid #000;
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
+}
 
+.textarea-container {
+  padding: 8px;
+  background: #b8dbfd;
+  -moz-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;    
+}
+
+.textarea-container textarea:focus,
+textarea:focus,
+input:focus {
+  /* background: #79bbfd; */
+}
+
+
+textarea, 
+input {
+  outline: none;
+}
 
