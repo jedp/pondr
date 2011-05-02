@@ -127,6 +127,7 @@ a:hover {
 }
 
 .wish {
+  position: relative;
   margin-top: 40px;
 }
 
@@ -169,9 +170,6 @@ ul.options li {
   height: 6em;
 }
 
-.addComment input.submit {
-  float: right;
-}
 
 .commentInfo ul {
   display: block;
@@ -193,8 +191,12 @@ ul.options li {
 .addResponse textarea {
   height: 6em;
 }
+
+.addComment input.submit,
 .addResponse input.submit {
-  float: right;
+  position: absolute;
+  display: block;
+  right: 0px;
 }
 
 
