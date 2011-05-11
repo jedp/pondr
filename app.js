@@ -10,6 +10,8 @@ var express = require('express');
 var connect = require('connect');
 var RedisStore = require('connect-redis');
 
+var completer = require('redis-completer');
+
 var nowjs = require('now');
 var models = require('./models');
 var auth = require('./lib/auth');
@@ -82,6 +84,11 @@ function loginRequired(req, res, next) {
     }
 }
 
+app.get('/', function(req, res) {
+  res.redirect('wish');
+});
+
+
 app.get('/wish', loginRequired, function getRoot(req, res) {
   var wish = new models.Wish({whose:req.session.user});
   res.render('wish', {
@@ -107,10 +114,20 @@ app.post('/wish', loginRequired, function postWish(req, res) {
   );
 });
 
-app.get('/', function(req, res) {
-  res.redirect('wish');
+app.post('/comment', loginRequired, function postComment(req, res) {
+  // Add a new comment to a wish
+  console.log(req.body);
+  console.log(req);
+  res.writeHead(200);
+  res.end();
 });
 
+app.post('/response', loginRequired, function postResponse(req, res) {
+  // Add a response to a comment on a wish
+  console.log(req.body);
+  res.writeHead(200);
+  res.end();
+});
 
 app.get('/signup', function getSignup(req, res) {
   res.render('signup');
