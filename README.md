@@ -21,4 +21,5 @@ You can `npm install` all of these:
   - `mongoose`
   - `redis`
   - `underscore`
+  - `redis-completer`
 
