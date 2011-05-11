@@ -2,6 +2,9 @@
 var fs = require('fs');
 eval(fs.readFileSync('./config.js', 'ascii'));
 
+var completer = require('redis-completer');
+completer.applicationPrefix(settings.appPrefix);
+
 var mongoose = require('mongoose/');
 mongoose.connect ('mongodb://localhost/' + settings.dbname);
 
@@ -43,6 +46,11 @@ WishSchema.pre('save', function(next) {
     this.random = Math.random();
     this.updated = new Date();
     next();
+});
+
+WishSchema.post('save', function(next) {
+  // after saving a new wish, add title to completions db
+  completer.addCompletions(this.text, this._id);
 });
 
 WishSchema.method('upVote', function() {
