@@ -170,14 +170,22 @@ ul.options li {
   height: 6em;
 }
 
-
-.commentInfo ul {
+.buttons {
+  width: 100%;
+  height: 24px;
+  padding: 4px 0px;
   display: block;
-  list-style: none;
-  text-align: right;
+  position: relative;
 }
 
-.commentInfo ul li {
+.buttons-right {
+  position: absolute;
+  right: 0px;
+  display: block;
+  list-style: none;
+}
+
+.buttons li {
   display: inline-block;
   margin-left: 12px;
 }
