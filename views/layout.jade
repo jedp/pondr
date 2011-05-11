@@ -13,11 +13,10 @@ html
       div(id='wish_{{ _id }}', class='wish')
         .wishText
           a(class='vote') {{ text }}
-        ul.options
-          li 
-            a(class='more') discuss
-          li 
-            a(class='flag') flag
+        .buttons
+          ul.buttons-right
+            li.more discuss
+            li.flag flag
 
         .comments-container
           .comments 
@@ -31,8 +30,8 @@ html
     #comment-template(style='display: none')
       .comment
         .commentText {{ text }}
-        .commentInfo
-          ul
+        .buttons
+          ul.buttons-right
             li.whose {{ whose }}
             li.flag flag
             li.upvote upvote

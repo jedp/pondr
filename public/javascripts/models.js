@@ -4,7 +4,23 @@ _.templateSettings = {
   interpolate : /\{\{(.+?)\}\}/g
 };
 
-var Response = Backbone.Model.extend({ });
+var Response = Backbone.Model.extend({ 
+  defaults: {
+    score: 0,
+    parentCommentId: null
+  }, 
+
+  // When we save a comment, we let the server take care
+  // of folding it into the Wish model and saving the whole
+  // thing.
+  url: function() {
+    if (this.isNew) {
+      return '/response';
+    } else {
+      return '/response/' + this.get('_id');
+    }
+  },
+});
 
 var ResponseView = Backbone.View.extend({
   model: Response, 
@@ -35,10 +51,35 @@ var ResponseCollection = Backbone.Collection.extend({
 // Comments are children of a Wish.
 // Each comment can have a collection of Responses to it
 
-var Comment = Backbone.Model.extend({ });
+var Comment = Backbone.Model.extend({ 
+  defaults: {
+    score: 0,
+    parentWishId: null
+  },
 
-var CommentCollection = Backbone.Collection.extend({
-  model: Comment
+  // When we save a comment, we let the server take care
+  // of folding it into the Wish model and saving the whole
+  // thing.
+  url: function() {
+    if (this.isNew) {
+      return '/comment';
+    } else {
+      return '/comment/' + this.get('_id');
+    }
+  },
+
+  initialize: function() {
+    if (! this.get('created') ) {
+      this.set({created: new Date});
+    }
+
+    this.responses = new ResponseCollection;
+    this.responses.refresh(this.get('responses'));
+  },
+
+  voteFor: function() {
+    now.voteForComment(this.get('_id'));
+  }
 });
 
 var CommentView = Backbone.View.extend({
@@ -48,25 +89,55 @@ var CommentView = Backbone.View.extend({
 
   template: _.template( $('#comment-template').html() ),
 
+  events: {
+    'click .new-response': 'new_response'
+  },
+
   initialize: function() {
     _.bindAll(this, 'render');
     this.model.bind('change', this.render);
     this.model.view = this;
   },
 
+  new_response: function(event) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    var textarea = $(event.currentTarget).closest('.addResponse').find('textarea');
+    var text = textarea.val();
+    textarea.val("");
+    console.log("got text: " + text);
+
+    text = text.trim();
+    if (! text) { 
+      return; 
+    }
+
+    var response = new Response({ 
+      parentWishId: this.model.get('parentWishId'),
+      parentCommentId: this.model.get('_id'),
+      text: text,
+      whose: this.model.get('whose')});
+    this.model.responses.add(response);
+    console.log("adding: " + response);
+    response.save();
+    this.render();
+  },
+
   render: function() {
     var self = this;
     $(this.el).html(this.template(this.model.toJSON()));
 
-    var responses = new ResponseCollection;
-    responses.refresh(this.model.get('responses'));
-
-    responses.each( function(response) {
+    this.model.responses.each( function(response) {
       var responseView = new ResponseView({model: response});
       self.$('.responses').append(responseView.render().el);
     });
     return this;
   }
+});
+
+var CommentCollection = Backbone.Collection.extend({
+  model: Comment
 });
 
 // ----------------------------------------------------------------------
@@ -85,7 +156,10 @@ var Wish = Backbone.Model.extend({
   initialize: function() {
     if (! this.get('created') ) {
       this.set({created: new Date});
-    }
+    } 
+
+    this.comments = new CommentCollection;
+    this.comments.refresh(this.get('comments'));
   },
 
   voteFor: function() {
@@ -102,6 +176,7 @@ var WishView = Backbone.View.extend({
   template: _.template( $('#wish-template').html() ),
 
   events: {
+    'click .new-comment': 'new_comment',
     'click .more': 'more',
     'click .flag': 'flag'
   },
@@ -127,6 +202,32 @@ var WishView = Backbone.View.extend({
     console.log('flagged by ' + this.viewer);
   },
 
+  new_comment: function(event) {
+    event.stopPropagation();
+    event.preventDefault();
+
+    // refactor w/ new_response
+    var textarea = $(event.currentTarget).closest('.addComment').find('textarea');
+    var text = textarea.val();
+    textarea.val("");
+
+    text = text.trim();
+    if (! text) { 
+      return; 
+    }
+
+    var comment = new Comment({
+      parentWishId: this.model.get('_id'),
+      text: text,
+      whose: this.model.get('whose')});
+    this.model.comments.add(comment);
+    comment.save();
+    // add a view
+    commentView = new CommentView({model: comment});
+    self.$('.comments').append(commentView.render().el);
+  },
+
+
   edit: function() {
     $(this.el).addClass("editing");
     // noodly oodly oodly
@@ -137,10 +238,8 @@ var WishView = Backbone.View.extend({
     var self = this;
     $(this.el).html(this.template(this.model.toJSON()));
 
-    var comments = new CommentCollection;
-    comments.refresh(this.model.get('comments'));
-
-    comments.each( function(comment) {
+    this.model.comments.each( function(comment) {
+      comment.set({'parentWishId': self.model.get('_id')});
       commentView = new CommentView({model: comment});
       self.$('.comments').append(commentView.render().el);
     });
@@ -181,6 +280,8 @@ var NewWishApplicationView = Backbone.View.extend({
             
     this.model.save();
     this.el.fadeOut(200);
+
+    // having made a wish, go compare with others
     location.replace('/vote/'+this.model.get('_id'))
   }
 });
