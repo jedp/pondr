@@ -1,5 +1,6 @@
 // load settings
 var fs = require('fs');
+var _ = require('underscore');
 eval(fs.readFileSync('./config.js', 'ascii'));
 
 var completer = require('redis-completer');
@@ -50,7 +51,7 @@ WishSchema.pre('save', function(next) {
 
 WishSchema.post('save', function(next) {
   // after saving a new wish, add title to completions db
-  completer.addCompletions(this.text, this._id);
+  completer.addCompletions(this.text, this._id, this.votes);
 });
 
 WishSchema.method('upVote', function() {
@@ -83,6 +84,16 @@ WishSchema.static('voteForId', function(id, callback) {
   this.findOne({_id: id}, function(err, model) {
     model.upVote();
     callback(err, model.votes);
+  });
+});
+
+WishSchema.static('addAllCompletions', function() {
+  this.find({}, function(err, docs) {
+    if (!err) {
+      _.each(docs, function(doc) {
+        completer.addCompletions(doc.text, doc._id, doc.votes);
+      });
+    }
   });
 });
 
