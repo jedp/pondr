@@ -4,6 +4,14 @@ _.templateSettings = {
   interpolate : /\{\{(.+?)\}\}/g
 };
 
+function listsAreEqual(a, b) {
+  if (a.length !== b.length) return false;
+  for (var i=0; i<a.length; i++) {
+    if (a[i] !== b[i]) return false;
+  }
+  return true;
+}
+
 var Suggestion = Backbone.Model.extend({});
 
 var SuggestionView = Backbone.View.extend({
@@ -282,6 +290,10 @@ var NewWishApplicationView = Backbone.View.extend({
 
   el: $('#application'),
 
+  initialize: function() {
+    this.currentCompletions = [];
+  },
+
   events: {
     'click .submit': 'commit',
     'keydown .newWish': 'searchKeydown'
@@ -293,26 +305,31 @@ var NewWishApplicationView = Backbone.View.extend({
     var text = $('.newWish textarea').val();
     text += String.fromCharCode(event.which);
 
+    // bug - doesn't catch select-all + delete
+    // doesn't catch ctrl-a ctrl-k
     if (text.trim() === "") {
       return this.$('li.suggestion').remove();
     }
 
     // replace existing suggestion list with 
     // results from completer search
-    this.$('li.suggestion').remove();
     now.search(text, 10, function(err, results) {
-      _.each(results, function(result) {
-        // results are lists of [docid:text, ...]
-        // so split the id and the text apart
-        var sep = result.match(":").index;
-        var id = result.slice(0, sep);
-        var text = result.slice(sep+1);
+      if (!listsAreEqual(results, self.currentCompletions)) {
+        self.$('li.suggestion').remove();
+        _.each(results, function(result) {
+          // results are lists of [docid:text, ...]
+          // so split the id and the text apart
+          var sep = result.match(":").index;
+          var id = result.slice(0, sep);
+          var text = result.slice(sep+1);
 
-        var suggestion = new Suggestion({_id: id, text: text});
-        var view = new SuggestionView({model:suggestion});
+          var suggestion = new Suggestion({_id: id, text: text});
+          var view = new SuggestionView({model:suggestion});
 
-        self.$('.suggestions').append(view.render().el);
-      });
+          self.$('.suggestions').append(view.render().el);
+        });
+        self.currentCompletions = results;
+      }
     });
 
   },
