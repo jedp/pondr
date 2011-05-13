@@ -154,7 +154,10 @@ a:hover {
 
 .suggestion {
   padding: 4px; 
+}
 
+.suggestion:hover {
+  background-color: #b8dbfd;
 }
 
 .explanation {
@@ -203,7 +206,15 @@ ul.options li {
 
 .buttons li {
   display: inline-block;
+  padding: 4px 8px;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;    
   margin-left: 12px;
+  cursor: pointer;
+}
+.buttons li:hover {
+  background-color: #b8dbfd;
 }
 
 
