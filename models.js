@@ -11,42 +11,54 @@ mongoose.connect ('mongodb://localhost/' + settings.dbname);
 
 var Schema = mongoose.Schema;
 
+var UserSchema = new Schema({
+  username: String,
+  email: String,
+  reportsTo: [UserSchema],
+  karma: { type: Number, default: 0.0 }
+});
+
 var ResponseSchema = new Schema({
-    text: String,
-    updated: {type: Date, default: Date.now },
-    whose: {type: String, index: true},
-    score: {type: Number, default: 0}
+  text: String,
+  updated: {type: Date, default: Date.now },
+  whose: {type: String, index: true},
+  score: {type: Number, default: 0}
 });
 
 var CommentSchema = new Schema({
-    text: String, 
-    updated: {type: Date, default: Date.now },
-    whose: {type: String, index: true},
-    score: {type: Number, default: 0},
-    approved: {type: Boolean, default: false},
-    responses: [ResponseSchema],
+  text: String, 
+  updated: {type: Date, default: Date.now },
+  whose: {type: String, index: true},
+  score: {type: Number, default: 0},
+  approved: {type: Boolean, default: false},
+  responses: [ResponseSchema],
 });
 
 var WishSchema = new Schema({
-    text: String,
-    slug: String,
-    anonymous: {type: Boolean, default: false},
-    created: Date,
-    updated: {type: Date, default: Date.now },
+  text: String,
+  slug: String,
+  anonymous: {type: Boolean, default: false},
+  created: Date,
+  updated: {type: Date, default: Date.now },
 
-    whose: {type: String, index: true},
-    comments: [CommentSchema],
+  whose: {type: String, index: true},
+  comments: [CommentSchema],
 
-    random: {type: Number, index: true},
-    votes: {type: Number, default: 0},
-    rejects: {type: Number, default: 0}
+  random: {type: Number, index: true},
+  votes: {type: Number, default: 0},
+  rejects: {type: Number, default: 0}
 
 });
 
+UserSchema.method('addKarma', function(incr) {
+  this.karma += incr;
+  this.save();
+});
+
 WishSchema.pre('save', function(next) {
-    this.random = Math.random();
-    this.updated = new Date();
-    next();
+  this.random = Math.random();
+  this.updated = new Date();
+  next();
 });
 
 WishSchema.post('save', function(next) {
@@ -55,29 +67,29 @@ WishSchema.post('save', function(next) {
 });
 
 WishSchema.method('upVote', function() {
-    this.votes += 1;
-    this.save();
+  this.votes += 1;
+  this.save();
 });
 
 WishSchema.method('downVote', function() {
-    this.rejects += 1;
-    this.save();
+  this.rejects += 1;
+  this.save();
 });
 
 WishSchema.static('findRandom', function(otherThanTheseIds, callback) {
-    // callback with a random Wish.
-    // if otherThanThisId is provided, the wish will not have that id.
-    rand = Math.random();
+  // callback with a random Wish.
+  // if otherThanThisId is provided, the wish will not have that id.
+  rand = Math.random();
 
-    if (otherThanTheseIds) {
-        skip_ids = otherThanTheseIds;
-    } else {
-        skip_ids = []
-    }
+  if (otherThanTheseIds) {
+      skip_ids = otherThanTheseIds;
+  } else {
+      skip_ids = []
+  }
 
-    this.findOne( {_id: {'$nin': skip_ids},
-                 '$or': [ {'random': {'$gte': rand}},
-                          {'random': {'$lte': rand}}  ]}, callback);
+  this.findOne( {_id: {'$nin': skip_ids},
+               '$or': [ {'random': {'$gte': rand}},
+                        {'random': {'$lte': rand}}  ]}, callback);
 });
 
 WishSchema.static('voteForId', function(id, callback) {
