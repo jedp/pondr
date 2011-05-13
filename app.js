@@ -285,6 +285,8 @@ everyone.now.voteForId = function(id, callback) {
   });
 };
 
+everyone.now.search = completer.search;
+
 
 // Only listen on $ node app.js
 

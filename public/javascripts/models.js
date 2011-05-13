@@ -4,6 +4,28 @@ _.templateSettings = {
   interpolate : /\{\{(.+?)\}\}/g
 };
 
+var Suggestion = Backbone.Model.extend({});
+
+var SuggestionView = Backbone.View.extend({
+  model: Suggestion,
+
+  tagName: "li",
+
+  className: "suggestion",
+
+  template: _.template( $('#suggestion-template').html() ),
+
+  initialize: function() {
+    _.bindAll(this, 'render');
+  },
+
+  render: function() {
+    $(this.el).html(this.template(this.model.toJSON()));
+    return this;
+  }
+
+});
+
 var Response = Backbone.Model.extend({ 
   defaults: {
     score: 0,
@@ -267,11 +289,17 @@ var NewWishApplicationView = Backbone.View.extend({
 
   searchKeydown: function(event) {
     // grab the existing text, and the key just pressed
+    var self = this;
     var text = $('.newWish textarea').val();
     text += String.fromCharCode(event.which);
 
-    var self = this;
-    this.$('.auto-complete').remove();
+    if (text.trim() === "") {
+      return this.$('li.suggestion').remove();
+    }
+
+    // replace existing suggestion list with 
+    // results from completer search
+    this.$('li.suggestion').remove();
     now.search(text, 10, function(err, results) {
       _.each(results, function(result) {
         // results are lists of [docid:text, ...]
@@ -279,7 +307,11 @@ var NewWishApplicationView = Backbone.View.extend({
         var sep = result.match(":").index;
         var id = result.slice(0, sep);
         var text = result.slice(sep+1);
-        console.log(text);
+
+        var suggestion = new Suggestion({_id: id, text: text});
+        var view = new SuggestionView({model:suggestion});
+
+        self.$('.suggestions').append(view.render().el);
       });
     });
 

@@ -145,6 +145,22 @@ a:hover {
   height: 3em;
 }
 
+.suggestion-container {
+  position: fixed;
+  z-index: 100;
+  background-color: #b8dbfd;
+  margin-left: 6px;
+}
+
+.suggestion {
+  padding: 4px; 
+
+}
+
+.explanation {
+  display: none;
+}
+
 .newWishComment textarea {
   height: 8em;
 }

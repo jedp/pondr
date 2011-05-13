@@ -50,6 +50,8 @@ html
           .whose {{ whose }}
           .score {{ score }}
       
+    #suggestion-template(style='display: none')
+      a(href='/vote/{{_id}}') {{ text }}
 
     #content!= body
 
