@@ -262,6 +262,27 @@ var NewWishApplicationView = Backbone.View.extend({
 
   events: {
     'click .submit': 'commit',
+    'keydown .newWish': 'searchKeydown'
+  },
+
+  searchKeydown: function(event) {
+    // grab the existing text, and the key just pressed
+    var text = $('.newWish textarea').val();
+    text += String.fromCharCode(event.which);
+
+    var self = this;
+    this.$('.auto-complete').remove();
+    now.search(text, 10, function(err, results) {
+      _.each(results, function(result) {
+        // results are lists of [docid:text, ...]
+        // so split the id and the text apart
+        var sep = result.match(":").index;
+        var id = result.slice(0, sep);
+        var text = result.slice(sep+1);
+        console.log(text);
+      });
+    });
+
   },
 
   commit: function(event) {
