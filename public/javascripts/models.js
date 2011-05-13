@@ -222,9 +222,29 @@ var WishView = Backbone.View.extend({
     this.viewer = username;
   },
 
+  showTimeOnList: function() {
+    $(this.el).find('attr.date').text( this.model.get('created') );
+    // timeago
+  },
+
   more: function(event) {
-    // open and display comments          
+    // When somebody clicks the 'more' button on an item,
+    // hide all the other items.  (The view for the clicked
+    // item itself deals with toggling itself open/closed.)
+    var button = $(event.currentTarget);
+    var wishElem = button.closest('.wish');
+
+    if  (button.text() === 'show discussion') {
+      button.text("hide discussion");
+    } else {
+      button.text("show discussion");
+    }
+
     this.$('.comments-container').toggle();
+
+    // bug - this can move the location of the button in the flow
+    // with no mouseout event, so the button will remain highlighted
+    $('#application .wish').not(wishElem).toggle();
   },
 
   flag: function(event) {
@@ -373,6 +393,7 @@ var ListApplicationView = Backbone.View.extend({
 
   addOne: function(wish) {
     var view = new WishView({model: wish});
+    view.showTimeOnList();
     $(this.el).append(view.render().el);
   }
 });
@@ -389,7 +410,6 @@ var VoteApplicationView = Backbone.View.extend({
 
   events: {
     'click .vote': 'vote',
-    'click .more': 'more'
   },
 
   initialize: function() {
@@ -399,21 +419,6 @@ var VoteApplicationView = Backbone.View.extend({
     // via the server template.
   },
 
-  more: function(event) {
-    // When somebody clicks the 'more' button on an item,
-    // hide all the other items.  (The view for the clicked
-    // item itself deals with toggling itself open/closed.)
-    var button = $(event.currentTarget);
-    var wishElem = button.closest('.wish');
-    if  (button.text() === 'show discussion') {
-      button.text("hide discussion");
-    } else {
-      button.text("show discussion");
-    }
-    // bug - this can move the location of the button in the flow
-    // with no mouseout event, so the button will remain highlighted
-    $('#application .wish').not(wishElem).toggle();
-  },
 
   vote: function(event) {
     var self = this;
