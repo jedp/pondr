@@ -222,11 +222,6 @@ var WishView = Backbone.View.extend({
     this.viewer = username;
   },
 
-  showTimeOnList: function() {
-    this.$('.date').html( this.model.get('created') );
-    // timeago
-  },
-
   more: function(event) {
     // When somebody clicks the 'more' button on an item,
     // hide all the other items.  (The view for the clicked
@@ -308,7 +303,7 @@ var NewWishApplication = Backbone.Model.extend({});
 var NewWishApplicationView = Backbone.View.extend({
   model: Wish,
 
-  el: $('#application'),
+  el: $('#wish-application'),
 
   initialize: function() {
     this.currentCompletions = [];
@@ -385,7 +380,7 @@ var ListApplication = Backbone.Model.extend({});
 var ListApplicationView = Backbone.View.extend({
   model: ListApplication,
 
-  el: $("#application"),
+  el: $("#list-application"),
 
   initialize: function() {
     _.bindAll(this, 'addOne', 'render');
@@ -393,7 +388,6 @@ var ListApplicationView = Backbone.View.extend({
 
   addOne: function(wish) {
     var view = new WishView({model: wish});
-    view.showTimeOnList();
     $(this.el).append(view.render().el);
   }
 });
@@ -406,7 +400,7 @@ var VoteApplication = Backbone.Model.extend({});
 var VoteApplicationView = Backbone.View.extend({
   model: VoteApplication,
 
-  el: $("#application"),
+  el: $("#vote-application"),
 
   events: {
     'click .vote': 'vote',

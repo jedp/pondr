@@ -217,6 +217,10 @@ ul.options li {
   background-color: #b8dbfd;
 }
 
+#wish-application .date,
+#vote-application .date {
+  display: none;
+}
 
 .responseText, .addResponse{
   padding: 4px;
