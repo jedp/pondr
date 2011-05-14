@@ -1,0 +1,30 @@
+{"name": "pondr",
+ "description": "An app for expressing and prioritizing people's wishes",
+ "version": "0.0.1", 
+ "authors": ["Jed Parsons <jed@jedparsons.com> (http://jedparsons.com)",
+             "Joshua Goldenberg <joshua@nodeone.com>",
+             "David Hirschfield"],
+ "repository":
+    {"type": "git",
+     "url": "https://github.com/jedp/pondr"
+     },
+ "licenses":
+  [ {"type": "MIT",
+     "url": "https://github.com/jedp/pondr/blob/master/LICENSE" }],
+ "main": "pondr.js"
+ "dependencies": {
+    "backbone": "",
+    "connect": "",
+    "connect-redis": "",
+    "express": "",
+    "expresso": "",
+    "jade": "",
+    "mailer": "",
+    "mongodb": "",
+    "mongoose: >= "1.0.0",
+    "now": "",
+    "redis": "",
+    "redis-completer" >= "0.1.3",
+    "underscore": "" 
+    }
+}
