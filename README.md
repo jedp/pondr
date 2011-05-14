@@ -8,18 +8,5 @@ Change the value of `secret` and run it with `node app.js`.
 Dependencies
 ------------
 
-You can `npm install` all of these:
-
-  - `backbone`
-  - `connect`
-  - `connect-redis`
-  - `express`
-  - `expresso`
-  - `jade`
-  - `mailer`
-  - `mongodb`
-  - `mongoose`
-  - `redis`
-  - `underscore`
-  - `redis-completer`
+Run `npm install` to install dependencies in your local `node_modules`.
 
