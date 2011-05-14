@@ -303,13 +303,31 @@ app.get('/list', loginRequired, function list(req, res) {
     .sort('votes', -1)
     .limit(10)
     .execFind(function(err, wishes) {
-      res.render('list', {
-        locals: {
-          here: 'list',          
-          username: req.session.user,
-          wishes: wishes
-        }
-      });
+      if (err) { 
+        res.render('error', {
+          locals: {
+            here: 'list',
+            username: req.session.user,
+            message: "Whoah! An error: " + err
+          }
+        });
+      } else if (wishes.length < 1) {
+        res.render('error', {
+          locals: {
+            here: 'list',
+            username: req.session.user,
+            message: "There aren't any wishes yet."
+          }
+        });
+      } else {
+        res.render('list', {
+          locals: {
+            here: 'list',          
+            username: req.session.user,
+            wishes: wishes
+          }
+        });
+      }
     });
 });
 
