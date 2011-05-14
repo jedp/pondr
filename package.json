@@ -27,6 +27,7 @@
     "mongodb": "",
     "mongoose": ">=1.0.0",
     "now": "",
+    "optimist": "",
     "redis": "",
     "redis-completer": ">=0.1.3",
     "underscore": "" 
