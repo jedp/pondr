@@ -1,5 +1,7 @@
 node_modules
 
+congig.js
+
 *.un~
 *.swp
 *.swo
