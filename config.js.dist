@@ -5,6 +5,9 @@ settings = {
   // app namespace for redis db
   appPrefix: 'pondr', 
 
+  // db for mongo
+  dbname: 'pondr',
+
   // remember, it's a secret!
   secret: 'Attack at dawn!!!'
 }
