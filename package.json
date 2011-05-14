@@ -29,7 +29,7 @@
     "now": "",
     "optimist": "",
     "redis": "",
-    "redis-completer": ">=0.1.3",
+    "redis-completer": ">=0.1.4",
     "underscore": "" 
     }
 }
