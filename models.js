@@ -3,6 +3,12 @@ var fs = require('fs');
 var _ = require('underscore');
 eval(fs.readFileSync('./config.js', 'ascii'));
 
+if (typeof settings.dbname === 'undefined') {
+// don't proceed unless dbname is specified
+  settings.dbname = 'pondr';
+}
+
+
 var completer = require('redis-completer');
 completer.applicationPrefix(settings.appPrefix);
 

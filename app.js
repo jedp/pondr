@@ -230,17 +230,41 @@ app.get('/wish/random.:format/not/:ids', function getOtherRandomWish (req, res) 
 
 app.get('/vote/:id', loginRequired, function voteOn(req, res) {
   models.Wish.findOne({_id:req.params.id}, function(err, wish1) {
-    if (err || ! wish1) {
-      res.redirect('vote')
+    if (err) {
+      res.render('error', {
+        locals: {
+          here: 'vote',
+          username: req.session.user,
+          message: "Whoah! An error: " + err
+        }
+      });
+    } else if (!wish1) {
+      res.render('error', {
+        locals: {
+          here: 'vote',
+          username: req.session.user,
+          message: "That url doesn't go anywhere."
+        }
+      });
     } else {
       models.Wish.findRandom([wish1._id], function(err, wish2) {
-        res.render('vote', {
-          locals: {
-            here: 'vote',
-            username: req.session.user,
-            wishes: [wish1, wish2]
-          }
-        });
+        if (wish1 && wish2) {
+          res.render('vote', {
+            locals: {
+              here: 'vote',
+              username: req.session.user,
+              wishes: [wish1, wish2]
+            }
+          });
+        } else {
+          res.render('error', {
+            locals: {
+              here: 'vote',
+              username: req.session.user,
+              message: "There aren't enough wishes to vote on yet!"
+            }
+          });
+        }
       });
     }
   });
@@ -251,13 +275,23 @@ app.get('/vote', loginRequired, function vote(req, res) {
   // the interface will go from there
   models.Wish.findRandom(null, function(err, wish1) {
     models.Wish.findRandom([wish1._id], function(err, wish2) {
-      res.render('vote', {
-        locals: {
-          here: 'vote',
-          username: req.session.user,
-          wishes: [wish1, wish2]
-        }
-      });
+      if (wish1 && wish2) {
+        res.render('vote', {
+          locals: {
+            here: 'vote',
+            username: req.session.user,
+            wishes: [wish1, wish2]
+          }
+        });
+      } else {
+        res.render('error', {
+          locals: {
+            here: 'vote',
+            username: req.session.user,
+            message: "There aren't enough wishes to vote on yet!"
+          }
+        });
+      }
     });
   });
 });

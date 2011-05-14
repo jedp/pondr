@@ -223,7 +223,7 @@ var WishView = Backbone.View.extend({
   },
 
   showTimeOnList: function() {
-    $(this.el).find('attr.date').text( this.model.get('created') );
+    this.$('.date').html( this.model.get('created') );
     // timeago
   },
 
