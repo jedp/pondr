@@ -1,0 +1,10 @@
+#!/usr/bin/env node
+
+var pondr = require('./pondr.js');
+
+pondr.listen(pondr.settings.port);
+console.log("Listening on port %d", pondr.address().port);
+
+
+// -f = flush mongo + redis dbs
+// -h = help
