@@ -24,12 +24,15 @@
     "expresso": "",
     "jade": "",
     "mailer": "",
-    "mongodb": "",
+    "mime", "",
     "mongoose": ">=1.0.0",
+    "node-proxy": "",
     "now": "",
-    "optimist": "",
+    "optimist": ">=0.2.0",
+    "qs": "",
     "redis": "",
     "redis-completer": ">=0.1.4",
+    "socket.io": "",
     "underscore": "" 
     }
 }
