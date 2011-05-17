@@ -14,7 +14,8 @@ html
         .wishText
           a(class='vote') {{ text }}
         .info
-          attr(class='date') {{ created }}
+          attr(class='whose', title='{{whose}}') 
+          attr(class='date', title='{{created}}') 
         .buttons
           ul.buttons-right
             li.more show discussion
@@ -60,6 +61,7 @@ html
     script(type='text/javascript')
       head.js(
         {jquery:        "/javascripts/jquery-152.min.js"},
+        {timeago:       "/javascripts/jquery-timeago/jquery.timeago.js"},
         {underscore:    "/javascripts/underscore/underscore-min.js"},
         {backbone:      "/javascripts/backbone/backbone-min.js"},
         {nowjs:         "/nowjs/now.js"},
