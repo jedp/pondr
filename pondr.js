@@ -2,7 +2,7 @@
 /**
  * Module dependencies.
  */
-    
+
 var fs = require('fs');
 eval(fs.readFileSync('./config.js', 'ascii'));
 
@@ -17,6 +17,7 @@ var models = require('./models');
 var auth = require('./lib/auth');
 
 var app = module.exports = express.createServer();
+app.settings = settings;
 
 // use now.js for client models to talk to call functions
 // other than save() 
