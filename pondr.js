@@ -3,8 +3,11 @@
  * Module dependencies.
  */
 
+
 var fs = require('fs');
 eval(fs.readFileSync('./config.js', 'ascii'));
+
+var _ = require('underscore');
 
 var express = require('express');
 var connect = require('connect');
@@ -101,7 +104,41 @@ app.get('/wish', loginRequired, function getRoot(req, res) {
   });
 });
 
-app.post('/wish', loginRequired, function postWish(req, res) {
+// ----------------------------------------------------------------------
+// karma middleware 
+// increment karma asynchronously
+
+function karmaForWishing(req, res, next) {
+  models.User.addKarma(req.session.user, 10);
+  next();
+}
+
+function karmaForCommenting(req, res, next) {
+  next();
+}
+
+function karmaForResponding(req, res, next) {
+  next();
+}
+
+function karmaForVoting(req, res, next) {
+  // don't get karma for voting for your own wish
+  models.Wish.findOne({_id: req.params.id}, function(err, wish) {
+    if (!err && wish) {
+      models.User.addKarma(wish.whose.username, 1);
+      if (wish.whose !== req.session.user) {
+        models.User.addKarma(req.session.user, 1);
+      }
+    }
+  });
+
+  next();
+}
+
+// ----------------------------------------------------------------------
+// main routes
+
+app.post('/wish', loginRequired, karmaForWishing, function postWish(req, res) {
   var wish = new models.Wish(req.body);
   wish.save(
     function(err) {
@@ -115,17 +152,14 @@ app.post('/wish', loginRequired, function postWish(req, res) {
   );
 });
 
-app.post('/comment', loginRequired, function postComment(req, res) {
+app.post('/comment', loginRequired, karmaForCommenting, function postComment(req, res) {
   // Add a new comment to a wish
-  console.log(req.body);
-  console.log(req);
   res.writeHead(200);
   res.end();
 });
 
-app.post('/response', loginRequired, function postResponse(req, res) {
+app.post('/response', loginRequired, karmaForResponding, function postResponse(req, res) {
   // Add a response to a comment on a wish
-  console.log(req.body);
   res.writeHead(200);
   res.end();
 });
@@ -230,6 +264,8 @@ app.get('/wish/random.:format/not/:ids', function getOtherRandomWish (req, res) 
 });
 
 app.get('/vote/:id', loginRequired, function voteOn(req, res) {
+  // go to the voting page, and compare wish with id
+  // to another random with
   models.Wish.findOne({_id:req.params.id}, function(err, wish1) {
     if (err) {
       res.render('error', {
@@ -321,6 +357,7 @@ app.get('/list', loginRequired, function list(req, res) {
           }
         });
       } else {
+        _.each(wishes, function(wish) { console.log(wish.votes + ' ' + wish.text) });
         res.render('list', {
           locals: {
             here: 'list',          
@@ -332,9 +369,22 @@ app.get('/list', loginRequired, function list(req, res) {
     });
 });
 
-everyone.now.voteForId = function(id, callback) {
-  models.Wish.voteForId(id, function(err, result) {
-    if (!err && callback) { callback(result) }
+everyone.now.voteForWish = function(id, username, callback) {
+  models.Wish.findOne({_id: id}, function(err, wish) {
+    if (!err && wish && wish.whose !== username) {
+
+      // vote only valid if it's not by wish owner
+      if (wish.owner !== username) {
+        models.User.findOne({username:username}, function(err, user) {
+          if (!err && user) {
+            wish.upVote();
+
+            models.User.addKarma(wish.whose, 1);
+            user.addKarma(.1);
+          }
+        });
+      }
+    }
   });
 };
 
