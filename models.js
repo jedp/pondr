@@ -8,6 +8,7 @@ if (typeof settings.dbname === 'undefined') {
   settings.dbname = 'pondr';
 }
 
+function nocallback() {}
 
 var completer = require('redis-completer');
 completer.applicationPrefix(settings.appPrefix);
@@ -18,10 +19,11 @@ mongoose.connect ('mongodb://localhost/' + settings.dbname);
 var Schema = mongoose.Schema;
 
 var UserSchema = new Schema({
-  username: String,
+  username: { type: String, index: true },
   email: String,
-  reportsTo: [UserSchema],
-  karma: { type: Number, default: 0.0 }
+  pwhash: String,
+  karma: { type: Number, default: 0 },
+  reportsTo: [UserSchema]
 });
 
 var ResponseSchema = new Schema({
@@ -56,9 +58,24 @@ var WishSchema = new Schema({
 
 });
 
-UserSchema.method('addKarma', function(incr) {
-  this.karma += incr;
+UserSchema.method('addKarma', function(amount) {
+  this.karma.increment(amount);
   this.save();
+});
+
+UserSchema.static('addKarma', function(username, karma, callback) {
+  callback = callback || nocallback;
+  this.findOne( {username: username} , function(err, user) {
+    if (err) { 
+      return callback(err);
+    } else if (! user) {
+      return callback(new Error ("user not found: " + username));
+    } else {
+      user.addKarma(karma);
+      return callback(null, user.karma.valueOf());
+    }
+  }); 
+  return new Error("User not found");
 });
 
 WishSchema.pre('save', function(next) {
@@ -73,12 +90,13 @@ WishSchema.post('save', function(next) {
 });
 
 WishSchema.method('upVote', function() {
-  this.votes += 1;
+  this.votes.increment(1);
   this.save();
+  console.log(this.text + " - votes: " + this.votes.valueOf());
 });
 
 WishSchema.method('downVote', function() {
-  this.rejects += 1;
+  this.rejects.increment(1);
   this.save();
 });
 
@@ -98,7 +116,7 @@ WishSchema.static('findRandom', function(otherThanTheseIds, callback) {
                         {'random': {'$lte': rand}}  ]}, callback);
 });
 
-WishSchema.static('voteForId', function(id, callback) {
+WishSchema.static('upVote', function(id, callback) {
   this.findOne({_id: id}, function(err, model) {
     model.upVote();
     callback(err, model.votes);
@@ -118,14 +136,17 @@ WishSchema.static('addAllCompletions', function() {
 mongoose.model('ResponseModel', ResponseSchema);
 mongoose.model('CommentModel', CommentSchema);
 mongoose.model('WishModel', WishSchema);
+mongoose.model('UserModel', UserSchema);
 
 var Wish = mongoose.model('WishModel');
 var Comment = mongoose.model('CommentModel');
 var Response = mongoose.model('ResponseModel');
+var User = mongoose.model('UserModel');
 
 if (typeof exports !== 'undefined') {
     exports.Wish = Wish;
     exports.Comment = Comment;
     exports.Response = Response;
+    exports.User = User;
 }
     
