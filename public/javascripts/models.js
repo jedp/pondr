@@ -50,6 +50,11 @@ var Response = Backbone.Model.extend({
       return '/response/' + this.get('_id');
     }
   },
+
+  upVote: function(username) {
+    now.upVoteResponse(this.get('_id'), username);
+  }
+
 });
 
 var ResponseView = Backbone.View.extend({
@@ -107,8 +112,8 @@ var Comment = Backbone.Model.extend({
     this.responses.refresh(this.get('responses'));
   },
 
-  voteFor: function() {
-    now.voteForComment(this.get('_id'));
+  upVote: function(username) {
+    now.upVoteComment(this.get('_id'), username);
   }
 });
 
@@ -192,8 +197,8 @@ var Wish = Backbone.Model.extend({
     this.comments.refresh(this.get('comments'));
   },
 
-  voteFor: function() {
-    now.voteForId(this.get('_id'));
+  voteFor: function(username) {
+    now.voteForWish(this.get('_id'), username);
   }
 
 });
@@ -419,39 +424,42 @@ var VoteApplicationView = Backbone.View.extend({
     var notIds = _.map(self.views, function(view) { return view.model.get('_id')} ).join(',');
 
     var toRemove = [];
+
     _.each(this.views, function(view) { 
-      if (!view.el.contains(event.currentTarget)) {
-        // mark me for removal
+      if (! view.el.contains(event.currentTarget)) {
         toRemove.unshift(view);
       } else {
-        // vote for me!
-        view.model.voteFor();
+        view.model.voteFor(self.model.get('username'));
       }
     });
 
     // remove views that weren't voted for
     _.each(toRemove, function(r) { self.removeView(r)});
-
-    var wish = new Wish({id: 'random.json/not/'+notIds});
-    wish.fetch({
-      error: function(resp) { 
-        console.error(resp);
-      },
-      success: function(model, resp) {
-        self.addOne(wish);
-      }
+    
+    // replace views that weren't voted for
+    _.each(toRemove, function() { 
+      var wish = new Wish({id: 'random.json/not/'+notIds});
+      wish.fetch({
+        error: function(resp) { 
+          console.error(resp);
+        },
+        success: function(model, resp) {
+          self.addOne(wish);
+        }
+      });
     });
   },
 
   removeView: function(view) {
     this.views.splice(this.views.indexOf(view), 1);
     view.remove();
-  },
+  }, 
 
   addOne: function(wish) {
     var view = new WishView({model: wish});
     view.setViewer(this.model.get('username'));
-    $(this.el).append(view.render().el);
+    var newEl = view.render().el;
+    $(this.el).append(newEl);
     this.views.unshift(view);
   },
 });
