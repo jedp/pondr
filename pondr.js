@@ -95,13 +95,23 @@ app.get('/', function(req, res) {
 
 app.get('/wish', loginRequired, function getRoot(req, res) {
   var wish = new models.Wish({whose:req.session.user});
-  res.render('wish', {
-    locals: {
-      here: 'wish',
-      username: req.session.user,
-      wish: wish
-    }
-  });
+  models.Wish
+    .find({})
+    .sort('created', -1)
+    .limit(10)
+    .execFind(function(err, whatsnew) {
+      // XXX refine this template after prototyping
+      // XXX displaying only necessary fields
+      console.log("new: " + whatsnew);
+      res.render('wish', {
+        locals: {
+          here: 'wish',
+          username: req.session.user,
+          wish: wish,
+          whatsnew: whatsnew
+        }
+      });
+    });
 });
 
 // ----------------------------------------------------------------------
