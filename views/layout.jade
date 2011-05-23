@@ -11,24 +11,27 @@ html
 
     #wish-template(style='display: none')
       div(id='wish_{{ _id }}', class='wish')
+        .wishOwner
+          
         .wishText
           a(class='vote') {{ text }}
-        .info
-          attr(class='whose', title='{{whose}}') 
-          attr(class='date', title='{{created}}') 
-        .buttons
-          ul.buttons-right
-            li.more show discussion
-            li.flag flag
+        .otherStuff
+          .info
+            attr(class='whose', title='{{whose}}') 
+            attr(class='date', title='{{created}}') 
+          .buttons
+            ul.buttons-right
+              li.more show discussion
+              li.flag flag
 
-        .comments-container
-          .comments 
+          .comments-container
+            .comments 
 
-          .addComment 
-            div Add a new comment:
-            .textarea-container
-              textarea
-            a(class='new-comment') submit
+            .addComment 
+              div Add a new comment:
+              .textarea-container
+                textarea
+              a(class='new-comment') submit
 
     #comment-template(style='display: none')
       .comment
