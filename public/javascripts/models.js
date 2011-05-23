@@ -464,4 +464,20 @@ var VoteApplicationView = Backbone.View.extend({
   },
 });
 
+var WhatsNewApplication = Backbone.Model.extend({});
+
+var WhatsNewApplicationView = Backbone.View.extend({
+  model: WhatsNewApplication,
+
+  el: $("#whats-new-application"),
+
+  initialize: function() {
+    _.bindAll(this, 'addOne', 'render');
+  },
+
+  addOne: function(wish) {
+    var view = new WishView({model: wish});
+    $(this.el).append(view.render().el);
+  }
+});
 
