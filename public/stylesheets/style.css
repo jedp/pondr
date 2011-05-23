@@ -275,3 +275,10 @@ input {
   outline: none;
 }
 
+#whats-new-application .otherStuff {
+  display: none;
+}
+
+#whats-new-application .wish {
+  margin-top: 4px;
+}
