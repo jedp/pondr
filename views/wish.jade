@@ -19,7 +19,6 @@
         textarea
 
   div
-  
     p
       span
         input(type='checkbox', id='anonymous') 
@@ -27,10 +26,26 @@
       span  
         button.submit Yes, that's what I think
 
+#whats-new-application
+  h2 Recent wishes ...
+
 script(type='text/javascript')
   head.ready(function() {
+
+    //- A slot for the new wish
+
     var wish = new Wish( !{ JSON.stringify(wish) } ); 
     var app = new NewWishApplicationView({model: wish});
+
+    //- what's new in the system - a list collection
+
+    var newsCollection = new WishCollection;
+    newsCollection.refresh( !{ JSON.stringify(whatsnew) });
+
+    var news = new WhatsNewApplication;
+    var newsApp = new WhatsNewApplicationView({model: news});
+    newsCollection.each( newsApp.addOne );
   });
+
 
 
