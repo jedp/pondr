@@ -312,11 +312,12 @@ var NewWishApplicationView = Backbone.View.extend({
 
   initialize: function() {
     this.currentCompletions = [];
+    this.haveComment = false;
   },
 
   events: {
     'click .submit': 'commit',
-    'keydown .newWish': 'searchKeydown',
+    'keydown .newWish': 'keyDown',
     'click .newWish': 'cancelSearch'
   },
   
@@ -324,17 +325,29 @@ var NewWishApplicationView = Backbone.View.extend({
     this.$('li.suggestion').remove();
   },
 
-  searchKeydown: function(event) {
-    // grab the existing text, and the key just pressed
-    var self = this;
-    var text = $('.newWish textarea').val();
-    text += String.fromCharCode(event.which);
+  maybeAddComment: function(text) {
+    // As the user writes a new wish, once sentence-final punctuation is
+    // encountered, add a Comment and move keyboard focus to the comment.
+    if (this.haveComment === true) {
+      return;
+    }
 
+    // has the user typed a sentence?
+    if (text.match(/[^\.]+\.\s/)) { 
+      console.log("sentence: " + text);
+      // make comment-container visible
+      // update save method
+      this.haveComment = true;
+    }
+  },
+
+  autocompleteSearch: function(text) {
     // bug - doesn't catch select-all + delete
     // doesn't catch ctrl-a ctrl-k
     if (text.trim() === "") {
       return this.$('li.suggestion').remove();
     }
+    var self = this;
 
     // replace existing suggestion list with 
     // results from completer search
@@ -358,6 +371,15 @@ var NewWishApplicationView = Backbone.View.extend({
     });
 
   },
+
+  keyDown: function(event) { 
+    // grab the existing text, and the key just pressed
+    var text = $('.newWish textarea').val();
+    text += String.fromCharCode(event.which);
+    this.autocompleteSearch(text);
+    this.maybeAddComment(text);
+  },
+
 
   commit: function(event) {
     //var wish = new Wish();
