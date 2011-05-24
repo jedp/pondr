@@ -53,9 +53,8 @@ table {
  */
 
 body {
-  padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  font-weight: 400;
+  font-weight: normal;
   font-style: normal;
   background-color: #3c5c7e;
   overflow: auto;
@@ -75,8 +74,8 @@ body {
  */
 
 #links {
-    height: 1em;
-    padding: 4px 120px;
+	margin:1em 0;
+	text-align:center;
 }
 
 #links ul {
@@ -85,12 +84,12 @@ body {
 
 #links li {
     background-color: #6095ca;
-    display: inline;
+    display: inline-block;
     margin-right: 12px;
     padding: 4px 8px;
-    -moz-border-radius: 8px;
-    -webkit-border-radius: 8px;
-    border-radius: 8px;    
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;    
 }
 
 #links li.current {
@@ -112,14 +111,12 @@ a:hover {
     color: #000000;
 }
 
+/*main body of page*/
 #content {
     text-align: left;
-    padding: 8px 20px;
-    background-color: #6095ca;
-    margin: 20px 120px;
-    -moz-border-radius: 8px;
-    -webkit-border-radius: 8px;
-    border-radius: 8px;    
+	max-width:900px;
+	min-width:420px;
+	margin:auto;
 }
 
 #application p {
@@ -141,9 +138,26 @@ a:hover {
   border-radius: 6px;    
 }
 
+
 .newWish textarea {
-  height: 3em;
+  height: 80px;
+  font-size:2em;
 }
+
+
+/*make a wish section*/
+#wish-application {
+	background:rgba(0,0,0,.2);
+	padding:20px;
+	color:#fff;
+}
+
+/*label for making a wish*/
+#wish-application p {
+	font-size:20px;
+	padding:10px 0;
+}
+
 
 .suggestion-container {
   position: fixed;
@@ -248,16 +262,16 @@ a {
 }
 
 textarea { 
-  background: #b8dbfd;
   border: 0px solid #000;
   width: 100%;
   padding: 0px;
   margin: 0px;
+  background:none;
 }
 
 .textarea-container {
   padding: 8px;
-  background: #b8dbfd;
+  background: #fff;
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
   border-radius: 6px;    
