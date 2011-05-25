@@ -333,9 +333,19 @@ var NewWishApplicationView = Backbone.View.extend({
     }
 
     // has the user typed a sentence?
-    if (text.match(/[^\.]+\.\s/)) { 
-      console.log("sentence: " + text);
-      // make comment-container visible
+    var sentences = text.match(/([^\.]+\.)\s+(.*)/);
+    if (sentences) {
+      var wish = sentences[1].trim();
+      var comment = sentences[2].trim();
+
+      this.$('.newWish-why').show();
+      this.$('.comments-container').show();
+      $( this.$('.comments-container')[0]).focus();
+
+      this.$('.textarea-container textarea').val(wish);
+      this.$('.comments-container textarea').val(comment);
+
+      
       // update save method
       this.haveComment = true;
     }
