@@ -23,6 +23,7 @@
     "express": "",
     "expresso": "",
     "jade": "",
+    "less": "",
     "mailer": "",
     "mime", "",
     "mongoose": ">=1.0.0",

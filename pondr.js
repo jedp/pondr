@@ -42,6 +42,7 @@ app.configure(function(){
 
   // serve css and js
   app.use(express.static(__dirname + '/public'));
+  app.use(express.compiler({ src: __dirname + '/public', enable: ['less'] }));
 });
 
 app.configure('development', function(){
@@ -113,6 +114,7 @@ app.get('/wish', loginRequired, function getRoot(req, res) {
       });
     });
 });
+
 
 // ----------------------------------------------------------------------
 // karma middleware 

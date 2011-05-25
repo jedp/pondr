@@ -2,132 +2,56 @@
    v2.0 | 20110126
    License: none (public domain)
 */
-html,
-body,
-div,
-span,
-applet,
-object,
-iframe,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-blockquote,
-pre,
-a,
-abbr,
-acronym,
-address,
-big,
-cite,
-code,
-del,
-dfn,
-em,
-img,
-ins,
-kbd,
-q,
-s,
-samp,
-small,
-strike,
-strong,
-sub,
-sup,
-tt,
-var,
-b,
-u,
-i,
-center,
-dl,
-dt,
-dd,
-ol,
-ul,
-li,
-fieldset,
-form,
-label,
-legend,
-table,
-caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
-article,
-aside,
-canvas,
-details,
-embed,
-figure,
-figcaption,
-footer,
-header,
-hgroup,
-menu,
-nav,
-output,
-ruby,
-section,
-summary,
-time,
-mark,
-audio,
-video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
-  display: block;
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
 }
 body {
-  line-height: 1;
+	line-height: 1;
 }
 ol, ul {
-  list-style: none;
+	list-style: none;
 }
 blockquote, q {
-  quotes: none;
+	quotes: none;
 }
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
-  content: '';
-  content: none;
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
 }
 table {
-  border-collapse: collapse;
-  border-spacing: 0;
+	border-collapse: collapse;
+	border-spacing: 0;
 }
+
 /* 
  * End reset
  * 
  */
+
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   font-weight: normal;
@@ -148,49 +72,62 @@ body {
  * 96b8ff
  *
  */
+
 #links {
-  margin: 1em 0;
-  text-align: center;
+	margin:1em 0;
+	text-align:center;
 }
+
 #links ul {
-  list-style: none;
+    list-style: none;
 }
+
 #links li {
-  background-color: #6095ca;
-  display: inline-block;
-  margin-right: 12px;
-  padding: 4px 8px;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-  border-radius: 4px;
+    background-color: #6095ca;
+    display: inline-block;
+    margin-right: 12px;
+    padding: 4px 8px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;    
 }
+
 #links li.current {
   background-color: #79bbfd;
 }
+
+#links li.account {
+}
+
 #links li:hover {
   background: #b8dbfd;
 }
+
 a,
 a:active,
 a:visited,
 a:hover {
-  text-decoration: none;
-  color: #000000;
+    text-decoration: none;
+    color: #000000;
 }
+
 /*main body of page*/
 #content {
-  text-align: left;
-  max-width: 900px;
-  min-width: 420px;
-  margin: auto;
+    text-align: left;
+	max-width:900px;
+	min-width:420px;
+	margin:auto;
 }
+
 #application p {
-  margin: 20px 0px 0px 0px;
+    margin: 20px 0px 0px 0px;
 }
+
 .wish {
   position: relative;
   margin-top: 40px;
 }
+
 .wishText {
   text-align: center;
   padding: 8px;
@@ -198,57 +135,74 @@ a:hover {
   background-color: #b8dbfd;
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
-  border-radius: 6px;
+  border-radius: 6px;    
 }
+
+
 .newWish textarea {
   height: 80px;
-  font-size: 2em;
+  font-size:2em;
 }
+
+
 /*make a wish section*/
 #wish-application {
-  background: rgba(0, 0, 0, 0.2);
-  padding: 20px;
-  color: #fff;
+	background:rgba(0,0,0,.2);
+	padding:20px;
+	color:#fff;
 }
+
 /*label for making a wish*/
 #wish-application p {
-  font-size: 20px;
-  padding: 10px 0;
+	font-size:20px;
+	padding:10px 0;
 }
+
+
 .suggestion-container {
   position: fixed;
   z-index: 100;
   background-color: #b8dbfd;
   margin-left: 6px;
 }
+
 .suggestion {
-  padding: 4px;
+  padding: 4px; 
 }
+
 .suggestion:hover {
   background-color: #b8dbfd;
 }
+
 .explanation {
   display: none;
 }
+
 .newWishComment textarea {
   height: 8em;
 }
+
+
 ul.options {
   margin: 8px 0px;
   list-style: none;
   text-align: right;
 }
+
 ul.options li {
   display: inline-block;
   margin-left: 12px;
 }
+
 .commentText, .addComment {
   padding: 4px;
   margin-left: 20px;
-}
+} 
+
 .addComment textarea {
   height: 6em;
 }
+
 .buttons {
   width: 100%;
   height: 24px;
@@ -256,69 +210,89 @@ ul.options li {
   display: block;
   position: relative;
 }
+
 .buttons-right {
   position: absolute;
   right: 0px;
   display: block;
   list-style: none;
 }
+
 .buttons li {
   display: inline-block;
   padding: 4px 8px;
   -moz-border-radius: 8px;
   -webkit-border-radius: 8px;
-  border-radius: 8px;
+  border-radius: 8px;    
   margin-left: 12px;
   cursor: pointer;
 }
 .buttons li:hover {
   background-color: #b8dbfd;
 }
-#wish-application .date, #vote-application .date {
+
+#wish-application .date,
+#vote-application .date {
   display: none;
 }
-.responseText, .addResponse {
+
+.responseText, .addResponse{
   padding: 4px;
   margin-left: 80px;
 }
+
 .addResponse textarea {
   height: 6em;
 }
-.addComment input.submit, .addResponse input.submit {
+
+.addComment input.submit,
+.addResponse input.submit {
   position: absolute;
   display: block;
   right: 0px;
 }
+
 .comments-container {
   display: none;
 }
+
 a {
   cursor: pointer;
 }
-textarea {
+
+textarea { 
   border: 0px solid #000;
   width: 100%;
   padding: 0px;
   margin: 0px;
-  background: none;
+  background:none;
 }
-.textarea-container, .comments-container {
+
+.textarea-container,
+.comments-container {
   padding: 8px;
   background: #fff;
   -moz-border-radius: 6px;
   -webkit-border-radius: 6px;
-  border-radius: 6px;
+  border-radius: 6px;    
 }
-.textarea-container textarea:focus, textarea:focus, input:focus {
-  /* background: #79bbfd; */
 
+.textarea-container textarea:focus,
+textarea:focus,
+input:focus {
+  /* background: #79bbfd; */
 }
-textarea, input {
+
+
+textarea, 
+input {
   outline: none;
 }
+
 #whats-new-application .otherStuff {
   display: none;
 }
+
 #whats-new-application .wish {
   margin-top: 4px;
 }
