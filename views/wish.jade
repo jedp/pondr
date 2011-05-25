@@ -7,6 +7,12 @@
       .textarea-container
         textarea
 
+      .newWish-why(style="display: none")
+        p and here's why:
+        //- nb, comments-container hidden in css by default
+        .comments-container
+          textarea 
+
     div.suggestion-container
       ul.suggestions
  
@@ -29,7 +35,7 @@
 #whats-new-application
   h2 Recent wishes ...
 
-script(type='text/javascript')
+script
   head.ready(function() {
 
     //- A slot for the new wish
